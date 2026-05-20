@@ -10,20 +10,20 @@ pipeline {
                 }
             }
             steps {
-                sh 'mvn clean install'
+                sh 'mvn clean install -DskipTests'
             }
         }
         stage('Docker Build') {
             agent any
             steps {
-                sh 'docker build -t <samdg441/spring-petclinic:gestion-udem-jenkins .'
+                sh 'docker build -t samdg441/spring-petclinic:gestion-udem-jenkins .'
             }
         }
         stage('Docker Push') {
             agent any
             steps {
-                withCredentials([Principesamuel441* (credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
-                    sh "docker login -u samdg441 -p ${Principesamuel441*}"
+                withCredentials([usernamePassword(credentialsId: 'dockerHub', passwordVariable: 'dockerHubPassword', usernameVariable: 'dockerHubUser')]) {
+                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPassword}"
                     sh 'docker push samdg441/spring-petclinic:gestion-udem-jenkins'
                 }
             }
